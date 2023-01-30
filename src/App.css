@@ -2,6 +2,18 @@
   text-align: center;
 }
 
+#editor {
+  overflow: scroll;
+  resize: vertical;
+  min-height: 200px;
+  min-width: 600px;
+  max-width: 600px;
+}
+
+.Editor {
+}
+/*
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +48,4 @@
     transform: rotate(360deg);
   }
 }
+*/
