@@ -60,10 +60,13 @@ function App() {
       Learn React
       <div className="Editor">
         <Toolbar />
-        <textarea id="editor" onChange={handleChange}>
-          {text}
-        </textarea>
+        <div className="EditorPanel">
+          <textarea id="editor" onChange={handleChange}>
+            {text}
+          </textarea>
+        </div>
       </div>
+      <div className="Separator"></div>
       <Preview preview={marked.parse(text)} />
     </div>
   );
@@ -74,7 +77,7 @@ function Preview(props) {
   return (
     <div id="preview" className="Preview">
       <Toolbar />
-      <div dangerouslySetInnerHTML={previewText} />
+      <div className="PreviewText" dangerouslySetInnerHTML={previewText} />
     </div>
   );
 }
