@@ -54,6 +54,10 @@
   object-fit: scale-down;
 }
 
+.PreviewText code {
+  background-color: white;
+}
+
 .Toolbar {
   min-height: 20px;
   max-height: 20px;
