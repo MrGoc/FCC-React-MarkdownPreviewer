@@ -2,7 +2,36 @@
 import "./App.css";
 import { useState } from "react";
 import { marked } from "marked";
+import hljs from "highlight.js/lib/core";
+import javascript from "highlight.js/lib/languages/javascript";
+import "highlight.js/styles/github.css";
 
+hljs.registerLanguage("javascript", javascript);
+
+marked.use({
+  breaks: true,
+  langPrefix: "hljs language-javascript",
+});
+/*
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  /*
+  highlight: function (code, lang) {
+    const hljs = require("highlight.js");
+    const language = hljs.getLanguage(lang) ? lang : "plaintext";
+    return hljs.highlight(code, { language }).value;
+  },
+  langPrefix: "hljs language-", // highlight.js css expects a top-level 'hljs' class.
+  */
+/*
+  pedantic: false,
+  gfm: true,
+  breaks: true,
+  sanitize: false,
+  smartypants: false,
+  xhtml: false,
+});
+*/
 const defEditorText = `# Welcome to my React Markdown Previewer!
 
 ## This is a sub-heading...
@@ -73,7 +102,15 @@ function App() {
 }
 
 function Preview(props) {
-  const previewText = { __html: props.preview };
+  let parser = new DOMParser();
+  const doc = parser.parseFromString(props.preview, "text/html");
+  doc.querySelectorAll("code").forEach((el) => {
+    // then highlight each
+    hljs.highlightElement(el, { language: "javascript" });
+  });
+
+  //const previewText = { __html: props.preview };
+  const previewText = { __html: doc.documentElement.innerHTML };
   return (
     <div id="preview" className="Preview">
       <Toolbar />
