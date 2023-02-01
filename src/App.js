@@ -5,6 +5,12 @@ import { marked } from "marked";
 import hljs from "highlight.js/lib/core";
 import javascript from "highlight.js/lib/languages/javascript";
 import "highlight.js/styles/github.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCoffee,
+  faMaximize,
+  faDownLeftAndUpRightToCenter,
+} from "@fortawesome/free-solid-svg-icons";
 
 hljs.registerLanguage("javascript", javascript);
 
@@ -86,9 +92,9 @@ function App() {
 
   return (
     <div className="App">
-      Learn React
+      <div className="Separator"></div>
       <div className="Editor">
-        <Toolbar />
+        <Toolbar caption="Editor" />
         <div className="EditorPanel">
           <textarea id="editor" onChange={handleChange}>
             {text}
@@ -113,14 +119,20 @@ function Preview(props) {
   const previewText = { __html: doc.documentElement.innerHTML };
   return (
     <div id="preview" className="Preview">
-      <Toolbar />
+      <Toolbar caption="Preview" />
       <div className="PreviewText" dangerouslySetInnerHTML={previewText} />
     </div>
   );
 }
 
-function Toolbar() {
-  return <div className="Toolbar">Toolbar</div>;
+function Toolbar(props) {
+  return (
+    <div className="Toolbar">
+      <FontAwesomeIcon icon={faCoffee} />
+      <p>{props.caption}</p>
+      <FontAwesomeIcon icon={faMaximize} />
+    </div>
+  );
 }
 
 export default App;
