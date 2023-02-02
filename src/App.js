@@ -85,14 +85,20 @@ And here. | Okay. | I think we get it.
 
 function App() {
   const [text, setText] = useState(defEditorText);
-
+  /*
   function handleChange(e) {
     setText(e.target.value);
+  }
+*/
+  function handleChange(newText) {
+    setText(newText);
   }
 
   return (
     <div className="App">
       <div className="Separator"></div>
+      <Editor text={text} onChange={handleChange} />
+      {/*
       <div className="Editor">
         <Toolbar caption="Editor" />
         <div className="EditorPanel">
@@ -101,8 +107,25 @@ function App() {
           </textarea>
         </div>
       </div>
+      */}
       <div className="Separator"></div>
       <Preview preview={marked.parse(text)} />
+    </div>
+  );
+}
+
+function Editor({ text, onChange }) {
+  function handleChange(e) {
+    onChange(e.target.value);
+  }
+  return (
+    <div className="Editor">
+      <Toolbar caption="Editor" />
+      <div className="EditorPanel">
+        <textarea id="editor" onChange={handleChange}>
+          {text}
+        </textarea>
+      </div>
     </div>
   );
 }
