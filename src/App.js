@@ -18,26 +18,7 @@ marked.use({
   breaks: true,
   langPrefix: "hljs language-javascript",
 });
-/*
-marked.setOptions({
-  renderer: new marked.Renderer(),
-  /*
-  highlight: function (code, lang) {
-    const hljs = require("highlight.js");
-    const language = hljs.getLanguage(lang) ? lang : "plaintext";
-    return hljs.highlight(code, { language }).value;
-  },
-  langPrefix: "hljs language-", // highlight.js css expects a top-level 'hljs' class.
-  */
-/*
-  pedantic: false,
-  gfm: true,
-  breaks: true,
-  sanitize: false,
-  smartypants: false,
-  xhtml: false,
-});
-*/
+
 const defEditorText = `# Welcome to my React Markdown Previewer!
 
 ## This is a sub-heading...
@@ -83,46 +64,57 @@ And here. | Okay. | I think we get it.
 ![freeCodeCamp Logo](https://cdn.freecodecamp.org/testable-projects-fcc/images/fcc_secondary.svg)
 `;
 
+const captionEditor = "Editor";
+const captionPreview = "Preview";
+
 function App() {
   const [text, setText] = useState(defEditorText);
-  /*
-  function handleChange(e) {
-    setText(e.target.value);
-  }
-*/
+  const [maximized, setMaximized] = useState("");
+
   function handleChange(newText) {
     setText(newText);
+  }
+
+  function handleMaximized(newMaximized) {
+    setMaximized(newMaximized);
   }
 
   return (
     <div className="App">
       <div className="Separator"></div>
-      <Editor text={text} onChange={handleChange} />
-      {/*
-      <div className="Editor">
-        <Toolbar caption="Editor" />
-        <div className="EditorPanel">
-          <textarea id="editor" onChange={handleChange}>
-            {text}
-          </textarea>
-        </div>
-      </div>
-      */}
+      <Editor
+        text={text}
+        onChange={handleChange}
+        maximized={maximized}
+        onChangeMaximized={handleMaximized}
+      />
       <div className="Separator"></div>
-      <Preview preview={marked.parse(text)} />
+      <Preview
+        preview={marked.parse(text)}
+        maximized={maximized}
+        onChangeMaximized={handleMaximized}
+      />
     </div>
   );
 }
 
-function Editor({ text, onChange }) {
+function Editor({ text, onChange, maximized, onChangeMaximized }) {
   function handleChange(e) {
     onChange(e.target.value);
   }
+  if (maximized === captionPreview) return null;
+  let style = {};
+  if (maximized === captionEditor) style = { height: "900px" };
+
   return (
     <div className="Editor">
-      <Toolbar caption="Editor" />
+      <Toolbar
+        caption={captionEditor}
+        maximized={maximized}
+        onChangeMaximized={onChangeMaximized}
+      />
       <div className="EditorPanel">
-        <textarea id="editor" onChange={handleChange}>
+        <textarea id="editor" onChange={handleChange} style={style}>
           {text}
         </textarea>
       </div>
@@ -131,6 +123,8 @@ function Editor({ text, onChange }) {
 }
 
 function Preview(props) {
+  if (props.maximized === captionEditor) return null;
+
   let parser = new DOMParser();
   const doc = parser.parseFromString(props.preview, "text/html");
   doc.querySelectorAll("code").forEach((el) => {
@@ -138,22 +132,36 @@ function Preview(props) {
     hljs.highlightElement(el, { language: "javascript" });
   });
 
-  //const previewText = { __html: props.preview };
   const previewText = { __html: doc.documentElement.innerHTML };
   return (
     <div id="preview" className="Preview">
-      <Toolbar caption="Preview" />
+      <Toolbar
+        caption={captionPreview}
+        maximized={props.maximized}
+        onChangeMaximized={props.onChangeMaximized}
+      />
       <div className="PreviewText" dangerouslySetInnerHTML={previewText} />
     </div>
   );
 }
 
 function Toolbar(props) {
+  function onClick() {
+    if (props.maximized === "") props.onChangeMaximized(props.caption);
+    else props.onChangeMaximized("");
+  }
+
+  let maximized = props.maximized !== "";
+
   return (
     <div className="Toolbar">
       <FontAwesomeIcon icon={faCoffee} />
       <p>{props.caption}</p>
-      <FontAwesomeIcon icon={faMaximize} />
+      <FontAwesomeIcon
+        className="IconResize"
+        icon={maximized ? faDownLeftAndUpRightToCenter : faMaximize}
+        onClick={onClick}
+      />
     </div>
   );
 }

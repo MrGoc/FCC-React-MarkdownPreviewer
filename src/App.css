@@ -102,6 +102,11 @@
   padding-left: 10px;
 }
 
+.IconResize:hover {
+  cursor: pointer;
+  color: rgb(145, 189, 174);
+}
+
 .Separator {
   height: 40px;
 }
