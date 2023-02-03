@@ -134,13 +134,17 @@ function Preview(props) {
 
   const previewText = { __html: doc.documentElement.innerHTML };
   return (
-    <div id="preview" className="Preview">
+    <div className="Preview">
       <Toolbar
         caption={captionPreview}
         maximized={props.maximized}
         onChangeMaximized={props.onChangeMaximized}
       />
-      <div className="PreviewText" dangerouslySetInnerHTML={previewText} />
+      <div
+        id="preview"
+        className="PreviewText"
+        dangerouslySetInnerHTML={previewText}
+      />
     </div>
   );
 }
